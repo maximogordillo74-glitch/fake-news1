@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Detective de Noticias</title>
+<meta name="description" content="¿Podés distinguir las noticias falsas de las verdaderas? Jugá y descubrilo.">
+<meta property="og:title" content="🔎 Detective de Noticias">
+<meta property="og:description" content="¿Podés distinguir las noticias falsas de las verdaderas? Jugá y desafiá a tus amigos.">
+<meta property="og:type" content="website">
+<style>
+:root{--ac2:#ff4fa3;--bg:#f1efff;--card:#fff;--tx:#1d2330;--mut:#667085;--ac:#5b3df5;--ok:#12805c;--okb:#dcf5ea;--no:#c0392b;--nob:#fde4e1;--bd:#e3dfd5;--wr:#b7791f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141821;--card:#1e2430;--tx:#eef1f6;--mut:#9aa4b5;--ac:#7b9bff;--ok:#5fd6a6;--okb:#173a2f;--no:#ff8f82;--nob:#40201d;--bd:#2c3445;--wr:#f2c46b}}
+:root[data-theme="dark"]{--bg:#141821;--card:#1e2430;--tx:#eef1f6;--mut:#9aa4b5;--ac:#7b9bff;--ok:#5fd6a6;--okb:#173a2f;--no:#ff8f82;--nob:#40201d;--bd:#2c3445;--wr:#f2c46b}
+*{box-sizing:border-box}
+html,body{margin:0;background:radial-gradient(circle at 8% 0%,color-mix(in srgb,var(--ac) 26%,transparent),transparent 45%),radial-gradient(circle at 100% 35%,color-mix(in srgb,var(--ac2) 22%,transparent),transparent 42%),radial-gradient(circle at 20% 100%,color-mix(in srgb,#14b8a6 20%,transparent),transparent 40%),var(--bg);background-attachment:fixed;color:var(--tx);font-family:Georgia,"Times New Roman",serif}
+body{min-height:100vh;display:flex;justify-content:center;padding:16px}
+main{width:100%;max-width:580px}
+h1{font-size:1.75rem;margin:.2em 0;background:linear-gradient(90deg,var(--ac),var(--ac2),#ff9f1c);-webkit-background-clip:text;background-clip:text;color:transparent}
+.m{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px;margin:12px 0;box-shadow:0 8px 24px color-mix(in srgb,var(--ac) 16%,transparent)}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tb{height:12px;background:color-mix(in srgb,var(--ac) 18%,transparent);border-radius:6px;overflow:hidden;margin:8px 0;box-shadow:inset 0 1px 3px rgba(0,0,0,.2)}
+.tb i{display:block;height:100%;width:100%;background:var(--ok);transition:background .3s}
+.row{display:flex;gap:10px;margin-top:12px}
+button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:14px;cursor:pointer;flex:1;color:#fff;background:linear-gradient(135deg,#5b3df5,#d9308a);box-shadow:0 4px 12px rgba(91,61,245,.35);transition:transform .12s}button:not(:disabled):active{transform:scale(.97)}
+button.v{background:linear-gradient(135deg,#22c55e,#14b8a6);color:#04210f;box-shadow:0 4px 12px rgba(34,197,94,.35)}
+button.f{background:linear-gradient(135deg,#ff5d5d,#ff8a3d);color:#3a0a05;box-shadow:0 4px 12px rgba(255,93,93,.35)}
+button:disabled{opacity:.4;cursor:default}
+button.g{background:transparent;color:var(--ac);border:1px solid var(--ac);padding:10px;font-size:.9rem}
+button.lv{background:var(--card);color:var(--tx);border:2px solid var(--bd);text-align:left;font-weight:400;padding:12px}
+button.lv{box-shadow:none}button.lv[data-l="0"]{border-left:8px solid #22c55e;background:color-mix(in srgb,#22c55e 12%,var(--card))}button.lv[data-l="1"]{border-left:8px solid #f59e0b;background:color-mix(in srgb,#f59e0b 14%,var(--card))}button.lv[data-l="2"]{border-left:8px solid #ef4444;background:color-mix(in srgb,#ef4444 12%,var(--card))}button.lv.on{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,var(--card))}
+button.lv b{display:block}
+.post{border-left:7px solid var(--cat,var(--ac));background:linear-gradient(135deg,color-mix(in srgb,var(--cat,var(--ac)) 16%,var(--card)),var(--card) 70%)}
+.who{display:flex;gap:10px;align-items:center}
+.av{width:40px;height:40px;border-radius:50%;background:var(--bd);display:grid;place-items:center;font-size:1.3rem}
+.who small{display:block;color:var(--mut);font-family:ui-monospace,Menlo,monospace;font-size:.75rem}
+.post h2{font-size:1.25rem;line-height:1.3;margin:.7em 0}
+.stats{color:var(--mut);font-family:ui-monospace,Menlo,monospace;font-size:.8rem}
+.fb{border-radius:10px;padding:14px;margin-top:12px;line-height:1.45}
+.fb.ok{background:var(--okb);border-left:6px solid #22c55e}.fb.no{background:var(--nob);border-left:6px solid #ef4444}
+.chip{display:inline-block;border:1px solid var(--no);color:var(--no);background:color-mix(in srgb,var(--no) 14%,transparent);border-radius:20px;padding:2px 10px;margin:6px 6px 0 0;font-size:.8rem;font-family:ui-monospace,Menlo,monospace}
+.hint{background:color-mix(in srgb,#ffb100 18%,var(--card));border:1px dashed var(--wr);border-radius:10px;padding:10px;margin-top:10px;font-size:.92rem}
+input{font:inherit;width:100%;padding:12px;border-radius:10px;border:2px solid var(--bd);background:var(--card);color:var(--tx);margin:6px 0 10px}
+.lr{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:10px}.lr b{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lr i{font-style:normal;font-family:ui-monospace,Menlo,monospace}.lr.me{background:color-mix(in srgb,var(--ac) 18%,transparent)}
+#tabs button{padding:8px;font-size:.82rem}
+a.btn{display:block;text-align:center;text-decoration:none;font-weight:700;border-radius:12px;padding:14px;flex:1;color:#04210f;background:linear-gradient(135deg,#25d366,#12b886);box-shadow:0 4px 12px rgba(37,211,102,.35)}
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:7px;background:linear-gradient(90deg,#5b3df5,#ff4fa3,#ff9f1c,#22c55e,#06b6d4,#5b3df5);z-index:5}
+#start,#end{background:linear-gradient(135deg,color-mix(in srgb,var(--ac) 16%,var(--card)),color-mix(in srgb,var(--ac2) 13%,var(--card)) 60%,color-mix(in srgb,#ff9f1c 16%,var(--card)))}
+#lbc{background:linear-gradient(135deg,color-mix(in srgb,#06b6d4 14%,var(--card)),color-mix(in srgb,#22c55e 12%,var(--card)))}
+#lives{font-size:1rem;letter-spacing:2px}#score{color:var(--ac);font-weight:700}#time{color:var(--ac2);font-weight:700}
+#lb .lr:nth-child(1){background:color-mix(in srgb,#ffc107 26%,transparent)}#lb .lr:nth-child(2){background:color-mix(in srgb,#9aa4b5 24%,transparent)}#lb .lr:nth-child(3){background:color-mix(in srgb,#cd7f32 24%,transparent)}
+.cf{position:fixed;top:-30px;font-size:1.5rem;pointer-events:none;z-index:9;animation:fall 1.9s ease-in forwards}@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.badge{color:#1d9bf0;margin-left:2px}.prof{background:var(--bg);border-radius:10px;padding:12px;margin-top:10px;font-size:.9rem;line-height:1.5}.prof .m{display:block;margin-top:6px}
+.hide{display:none}
+.big{font-size:3rem;margin:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.grid div{background:color-mix(in srgb,var(--ac) 14%,var(--card));border-radius:12px;padding:10px;text-align:center}.grid div:nth-child(2){background:color-mix(in srgb,#22c55e 18%,var(--card))}.grid div:nth-child(3){background:color-mix(in srgb,#ff9f1c 22%,var(--card))}
+.grid b{display:block;font-size:1.4rem}
+ul{padding-left:1.1em;line-height:1.55}
+:root{--vb:#ffd60a;--ink:#14110f;--ok:#00c853;--no:#ff3b5c;--wr:#ff9f00;--ac:#7c3aed;--ac2:#ff2d95}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--vb:#3b1fa8;--ink:#fff}}
+:root[data-theme="dark"]{--vb:#3b1fa8;--ink:#fff}
+html,body{background:var(--vb)!important}
+body::before{display:none}
+.card{border:3px solid var(--ink);border-radius:18px;box-shadow:6px 6px 0 var(--ink)}
+#start,#end,#lbc{color:#14110f}#start .m,#end .m,#lbc .m{color:#14110f}
+#start{background:#ff5ca8}#end{background:#4cc9f0}#lbc{background:#a3e635}
+#start h1,#end h1{background:none;-webkit-text-fill-color:#14110f;color:#14110f}
+#game .m{color:var(--ink);font-weight:700}#score,#time{color:var(--ink)}
+.post{background:var(--card);border-left:16px solid var(--cat,var(--ac))}
+.av{background:var(--cat,var(--ac))!important;border:3px solid var(--ink)!important}
+button{background:#7c3aed;color:#fff;border:3px solid var(--ink);border-radius:14px;box-shadow:4px 4px 0 var(--ink)}
+button:not(:disabled):active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+button.v{background:#00e676;color:#14110f}button.f{background:#ff3b5c;color:#fff}
+button.g{background:#fff;color:#14110f;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+a.btn{background:#25d366;color:#14110f;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+button.lv{color:#14110f;font-weight:400}
+button.lv[data-l="0"]{background:#4ade80;border:3px solid var(--ink)}button.lv[data-l="1"]{background:#ffb703;border:3px solid var(--ink)}button.lv[data-l="2"]{background:#ff5d73;border:3px solid var(--ink)}
+button.lv.on{outline:4px solid var(--ink);outline-offset:2px}
+.tb{background:#fff;border:3px solid var(--ink);height:16px}
+.fb{color:#14110f;border:3px solid var(--ink)}.fb.ok{background:#b9f6ca}.fb.no{background:#ffc1cc}
+.chip{background:#ff3b5c;color:#fff;border-color:var(--ink)}
+.hint{background:#ffe14d;color:#14110f;border:3px dashed var(--ink)}
+.prof{background:#fff;color:#14110f;border:2px solid var(--ink)}
+.grid div{border:3px solid var(--ink);background:#c4b5fd;color:#14110f}.grid div:nth-child(2){background:#86efac}.grid div:nth-child(3){background:#fde047}
+#lb .lr:nth-child(1){background:#ffd60a}#lb .lr:nth-child(2){background:#e5e7eb}#lb .lr:nth-child(3){background:#ff9f45}.lr.me{outline:3px solid #14110f}
+input{border:3px solid var(--ink);background:#fff;color:#14110f}
+#start{background:#14110f;color:#fff}#start .m{color:#fff}#start h1{-webkit-text-fill-color:#fff;color:#fff}
+#name{background:#ffb703;color:#14110f}#name .m{color:#14110f}#name h1{background:none;-webkit-text-fill-color:#14110f;color:#14110f}
+</style>
+</head>
+<body>
+<main>
+<div id="name" class="card">
+  <div class="m">Paso 1 de 2</div>
+  <h1>🔎 Detective de Noticias</h1>
+  <p>Primero, elegí el <b>nombre</b> con el que vas a aparecer en la clasificación.</p>
+  <input id="nick" maxlength="16" placeholder="Escribí tu nombre o apodo" autocomplete="off">
+  <div class="row"><button id="ok1">Continuar →</button></div>
+  <p class="m" id="nerr"></p>
+</div>
+<div id="start" class="card hide">
+  <div class="m">Juego de verificación</div>
+  <h1>🔎 Detective de Noticias</h1>
+  <p>Aparece un post en tu “feed” con su autor: tocá <b>Ver perfil</b> para investigarlo. Decidí si es <b>verdadero</b> o <b>falso</b> antes de que se acabe el tiempo. Tenés <b>3 vidas</b> ❤️❤️❤️. Acertar rápido y en racha da más puntos. Podés pedir una pista, pero cuesta puntos.</p>
+  <div class="m">Elegí la dificultad</div>
+  <div class="row" style="flex-direction:column">
+    <button class="lv on" data-l="0"><b>🟢 Principiante</b>25 segundos por titular</button>
+    <button class="lv" data-l="1"><b>🟡 Analista</b>15 segundos por titular</button>
+    <button class="lv" data-l="2"><b>🔴 Verificador pro</b>8 segundos por titular</button>
+  </div>
+  <p class="m" id="who2"></p>
+  <div class="row"><button class="g" id="chg">✏️ Cambiar mi nombre</button></div>
+  <p class="m" id="best"></p>
+  <div class="row"><button id="go">Empezar (10 titulares)</button></div>
+  <div class="row"><button class="g" id="inv">📲 Invitar amigos a jugar</button></div>
+</div>
+
+<div id="game" class="hide">
+  <div class="bar"><span class="m" id="prog"></span><span class="m" id="lives"></span></div>
+  <div class="bar"><span class="m" id="score"></span><span class="m" id="time"></span></div>
+  <div class="tb"><i id="tbar"></i></div>
+  <div class="card post">
+    <div class="who"><div class="av" id="av"></div><div style="flex:1"><b id="src"></b><small id="meta"></small></div><button class="g" id="pb" style="flex:0 0 auto">👤 Ver perfil</button></div><div id="prof" class="prof hide"></div>
+    <h2 id="head"></h2>
+    <div class="stats" id="sh"></div>
+  </div>
+  <div class="row"><button class="v" id="bv">✔ Verdadera</button><button class="f" id="bf">✘ Falsa</button></div>
+  <div class="row"><button class="g" id="hb">💡 Pedir pista (-30 pts)</button></div>
+  <div id="hint" class="hint hide"></div>
+  <div id="fb" class="fb hide"></div>
+  <div class="row"><button id="next" class="hide">Siguiente →</button></div>
+</div>
+
+<div id="end" class="card hide">
+  <p class="big" id="emoji"></p>
+  <h1 id="rank"></h1>
+  <p id="why"></p>
+  <div class="grid">
+    <div><b id="e1"></b><span class="m">Puntos</span></div>
+    <div><b id="e2"></b><span class="m">Aciertos</span></div>
+    <div><b id="e3"></b><span class="m">Mejor racha</span></div>
+  </div>
+  <p id="trap"></p>
+  <div class="m">Antes de compartir, preguntate</div>
+  <ul>
+    <li>¿Quién lo publica? Mirá su perfil: antigüedad de la cuenta, bio, seguidores y si está verificada.</li>
+    <li>¿Te apura o te asusta? La urgencia es una señal de alarma.</li>
+    <li>¿Lo confirman otros medios confiables?</li>
+    <li>¿Tiene fecha, datos y autor verificables?</li>
+    <li>Con las imágenes, probá la búsqueda inversa.</li>
+  </ul>
+  <div class="m" style="margin-top:14px">¡Desafiá a tus amigos!</div><div class="row"><a class="btn" id="wa" target="_blank" rel="noopener">💬 Enviar por WhatsApp</a><button id="sh2">📲 Compartir</button></div><div class="row"><button id="copy" class="g">📋 Copiar desafío</button><button id="again">Jugar de nuevo</button></div>
+</div>
+<div id="lbc" class="card hide"><div class="m">🏆 Clasificación</div><div class="row" id="tabs"><button data-t="0">🟢 Principiante</button><button data-t="1">🟡 Analista</button><button data-t="2">🔴 Pro</button></div><div id="lb" style="margin-top:10px">Cargando…</div><p class="m" id="lbn"></p></div>
+</main>
+<script>
+const D=[
+{a:"🩺",s:"Revista Salud y Ciencia",c:"Salud",t:"Estudio: dormir menos de 6 horas de forma habitual se asocia con mayor riesgo cardiovascular",r:1,p:"Fijate en el verbo: “se asocia” es prudente, no promete milagros.",w:"Es una asociación respaldada por varias investigaciones. El lenguaje es cauteloso y no promete nada exagerado."},
+{a:"💬",s:"Cadena de WhatsApp",c:"Estafa",t:"URGENTE: WhatsApp cobrará $5 por mes desde mañana. Reenviá este mensaje a 10 contactos para seguir gratis",r:0,f:["Urgencia","Cadena de reenvío","Sin fuente oficial"],p:"¿Quién firma el mensaje? ¿Lo dice la propia empresa?",w:"Clásico de las cadenas: urgencia, amenaza y pedido de reenviar. No hay fuente oficial y circula hace años."},
+{a:"🐙",s:"Divulgación Marina",c:"Ciencia",t:"Los pulpos tienen tres corazones y sangre de color azul",r:1,p:"Suena increíble, pero es un dato de biología básica.",w:"Es cierto: dos corazones bombean a las branquias y uno al resto del cuerpo. La sangre es azul por la hemocianina."},
+{a:"🍋",s:"blog-salud-natural.xyz",c:"Salud",t:"Científicos descubren que tomar agua con limón en ayunas cura el cáncer en 48 horas",r:0,f:["Promesa milagrosa","Sitio sin respaldo","Plazo absurdo"],p:"¿Qué dice la medicina sobre curas que tardan 48 horas?",w:"Ninguna cura seria se anuncia así. Es un sitio sin respaldo médico que promete resultados imposibles."},
+{a:"🧱",s:"Publicación viral",c:"Mito",t:"La Gran Muralla China es visible a simple vista desde la Luna",r:0,f:["Mito repetido"],p:"Pensá en la distancia a la Luna y en lo angosta que es la muralla.",w:"Mito muy difundido. Desde la Luna no se distingue ninguna construcción humana a simple vista."},
+{a:"🐝",s:"Cognición Animal",c:"Ciencia",t:"Las abejas pueden aprender a reconocer rostros humanos, según experimentos",r:1,p:"Hubo experimentos con entrenamiento y recompensas.",w:"Estudios mostraron que las abejas melíferas pueden discriminar caras tras ser entrenadas. Raro, pero con respaldo."},
+{a:"🦈",s:"Imagen sin fuente",c:"Imagen",t:"Foto viral: un tiburón nada por una autopista inundada durante el huracán",r:0,f:["Imagen sin fuente","Reciclada de otras crisis"],p:"¿Quién tomó la foto? ¿Dónde y cuándo?",w:"Esta imagen falsa reaparece en casi cada huracán. Ante una foto impactante, buscala en reversa."},
+{a:"🍯",s:"Historia y Arqueología",c:"Historia",t:"Se encontró miel todavía comestible en tumbas egipcias de miles de años",r:1,p:"La miel tiene muy poca agua y es ácida.",w:"La miel casi no se echa a perder, y hubo hallazgos reportados en tumbas antiguas."},
+{a:"🧠",s:"Video motivacional",c:"Mito",t:"Solo usamos el 10% del cerebro: hay un 90% dormido esperando ser activado",r:0,f:["Mito repetido","Sin evidencia"],p:"Los estudios de imágenes cerebrales muestran actividad en casi todo el cerebro.",w:"Mito sin base científica. Usamos prácticamente todo el cerebro, aunque no todas las zonas a la vez."},
+{a:"🏦",s:"SMS de número desconocido",c:"Estafa",t:"Tu banco te regala $500: hacé clic en este enlace antes de la medianoche",r:0,f:["Urgencia","Regalo sospechoso","Enlace desconocido"],p:"¿Los bancos regalan dinero por SMS?",w:"Phishing: premio inesperado, plazo corto y enlace sospechoso. Los bancos no piden datos así."},
+{a:"🗼",s:"Ingeniería y Ciencia",c:"Ciencia",t:"La Torre Eiffel puede crecer unos 15 cm en verano por la dilatación del metal",r:1,p:"El metal se expande con el calor.",w:"Es verdad: el hierro se dilata con el calor y la torre puede “estirarse” unos centímetros."},
+{a:"☀️",s:"Foro Verdades Ocultas",c:"Conspiración",t:"Lo que los gobiernos esconden: el Sol se apagará el mes que viene y nadie te lo dice",r:0,f:["Teoría conspirativa","Sin fuente","Miedo"],p:"Si fuera cierto, ¿lo sabrían los astrónomos de todo el mundo?",w:"Apela al miedo y a un “secreto”, sin fuentes. La astronomía muestra que el Sol tiene miles de millones de años por delante."},
+{a:"🚶",s:"Medicina Preventiva",c:"Salud",t:"Estudios amplios encuentran que caminar a diario se relaciona con menos riesgo de enfermedades del corazón",r:1,p:"Habla de estudios amplios y de relación, no de curas.",w:"Es un hallazgo consistente en investigación de salud pública, expresado con cautela."},
+{a:"👍",s:"Página “Noticias Ya”",c:"Estafa",t:"Compartí este mensaje o tu cuenta será borrada hoy",r:0,f:["Amenaza","Cadena de reenvío","Urgencia"],p:"Las plataformas no borran cuentas por no compartir.",w:"Es una amenaza vacía típica de las cadenas. Ninguna red social funciona así."},
+{a:"⚡",s:"Frase popular",c:"Mito",t:"Los rayos nunca caen dos veces en el mismo lugar",r:0,f:["Mito repetido"],p:"Pensá en edificios muy altos durante las tormentas.",w:"Falso: los rayos caen varias veces en el mismo lugar, sobre todo en estructuras altas."},
+{a:"🍌",s:"Divulgación Científica",c:"Ciencia",t:"Los bananos son ligeramente radiactivos por su contenido de potasio",r:1,p:"Es una radiactividad natural y muy pequeña.",w:"Es cierto: el potasio contiene un isótopo radiactivo natural. La dosis es mínima e inofensiva."},
+{a:"🍅",s:"VideoVirales24",c:"Clickbait",t:"Mirá el tomate que habla: el video que dejó sin palabras a los científicos",r:0,f:["Clickbait","Exageración","Sin fuente"],p:"¿Qué científicos? ¿Qué estudio? Nada se menciona.",w:"Titular diseñado para generar clics: promete algo increíble pero no cita ninguna fuente."},
+{a:"🌳",s:"Ecología Global",c:"Ciencia",t:"Se estima que en la Tierra hay más árboles que estrellas en la Vía Láctea",r:1,p:"Se habla de una estimación a escala global.",w:"Las estimaciones indican unos 3 billones de árboles frente a unos cientos de miles de millones de estrellas."}
+];
+const P=[
+{n:"Revista Salud y Ciencia",h:"@saludyciencia",fo:"412 mil",b:"Revista de divulgación médica. Citamos estudios y fuentes en cada nota.",cr:"2014",v:1},
+{n:"Alerta Whats Info",h:"@alerta_whats_info",fo:"1.203",b:"🚨 Las noticias que NO quieren que sepas. ¡Compartí!!!",cr:"hace 3 semanas",v:0},
+{n:"Mar Abierto",h:"@marabierto",fo:"230 mil",b:"Biología marina para curiosos. Hecho por un equipo de biólogos.",cr:"2015",v:1},
+{n:"Vida Natural Hoy",h:"@vidanaturalhoy",fo:"58 mil",b:"Curas naturales que los médicos no te cuentan 🍃 Comprá en el link.",cr:"hace 2 meses",v:0},
+{n:"Datos Virales 99",h:"@datosvirales99",fo:"9.870",b:"Datos locos que te van a volar la cabeza 🤯",cr:"hace 5 meses",v:0},
+{n:"Ciencia Animal Lab",h:"@cienciaanimal",fo:"96 mil",b:"Investigación en comportamiento animal. Equipo universitario.",cr:"2017",v:1},
+{n:"Impacto Mundial",h:"@impacto_mundial",fo:"15 mil",b:"Imágenes impactantes de todo el mundo. Sin créditos.",cr:"hace 1 mes",v:0},
+{n:"Historia al Día",h:"@historiaaldia",fo:"150 mil",b:"Arqueología e historia con fuentes académicas.",cr:"2013",v:1},
+{n:"Motivación Total",h:"@motivaciontotal",fo:"47 mil",b:"Desbloqueá tu potencial 🚀 Cursos en el link.",cr:"2021",v:0},
+{n:"Banco Premios 24h",h:"@bco_premios_24h",fo:"12",b:"Sin biografía",cr:"hace 2 días",v:0},
+{n:"Ingeniería Hoy",h:"@ingenieriahoy",fo:"88 mil",b:"Ingenieros explicando cómo funcionan las cosas.",cr:"2016",v:1},
+{n:"Verdades Ocultas",h:"@verdades_ocultas",fo:"3.411",b:"Despertá. Los poderosos mienten. Mirá lo que no te muestran.",cr:"hace 4 meses",v:0},
+{n:"Instituto Medicina Preventiva",h:"@medpreventiva",fo:"305 mil",b:"Instituto de salud pública. Información basada en evidencia.",cr:"2012",v:1},
+{n:"Noticias Ya",h:"@noticiasya_ok",fo:"721",b:"URGENTE ⚠️ Activá las notificaciones",cr:"hace 6 días",v:0},
+{n:"Frases y Dichos",h:"@frasesydichos",fo:"62 mil",b:"Frases populares que se repiten sin parar.",cr:"2019",v:0},
+{n:"Ciencia en Casa",h:"@cienciaencasa",fo:"177 mil",b:"Divulgación científica con docentes y físicos.",cr:"2015",v:1},
+{n:"VideoVirales24",h:"@videovirales24",fo:"31 mil",b:"Los videos más locos 😱 ¡Seguinos y compartí!",cr:"hace 8 meses",v:0},
+{n:"Planeta Verde",h:"@planetaverde",fo:"204 mil",b:"Ecología y conservación. Citamos papers científicos.",cr:"2014",v:1}
+];
+D.forEach((x,k)=>Object.assign(x,P[k]));
+const CC={Salud:"#14b8a6",Estafa:"#ef4444",Ciencia:"#3b82f6",Mito:"#f59e0b",Imagen:"#ec4899",Historia:"#a16207",Conspiración:"#8b5cf6",Clickbait:"#f97316"};
+const LV=[{n:"Principiante",t:25},{n:"Analista",t:15},{n:"Verificador pro",t:8}];
+const $=i=>document.getElementById(i);
+let lv=0,Q,i,sc,hp,st,bst,ok,tl,tm,ans,hint,traps;
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function show(id){["name","start","game","end"].forEach(x=>$(x).classList.toggle("hide",x!==id));$("lbc").classList.toggle("hide",id!=="end")}
+function best(){const b=ls("dn_b"+lv);$("best").textContent=b?"Récord en "+LV[lv].n+": "+b+" pts":""}
+document.querySelectorAll(".lv").forEach(b=>b.onclick=()=>{lv=+b.dataset.l;document.querySelectorAll(".lv").forEach(x=>x.classList.toggle("on",x===b));best()});
+function start(){ls("dn_nick",nickv());Q=[...D].sort(()=>Math.random()-.5).slice(0,10);i=0;sc=0;hp=3;st=0;bst=0;ok=0;traps={};show("game");load()}
+function hud(){$("lives").textContent="❤️".repeat(hp)+"🖤".repeat(3-hp);$("score").textContent="Puntos: "+sc+(st>1?" · racha "+st+" 🔥":"");$("prog").textContent="Titular "+(i+1)+" de 10"}
+function load(){ans=false;hint=false;const n=Q[i];$("av").textContent=n.a;{const cc=CC[n.c]||"#5b3df5";document.querySelector(".post").style.setProperty("--cat",cc);$("av").style.background=cc+"33";$("av").style.border="2px solid "+cc}$("src").innerHTML=n.n+(n.v?" <span class='badge'>✔</span>":"");$("meta").textContent=n.h+" · "+n.c+" · hace "+(1+(i*7)%23)+" h";$("prof").classList.add("hide");$("pb").textContent="👤 Ver perfil";$("prof").innerHTML="<div>"+n.b+"</div><span class='m'>Seguidores: "+n.fo+"</span><span class='m'>Cuenta creada: "+n.cr+"</span><span class='m'>"+(n.v?"✔ Cuenta verificada":"Sin verificar")+"</span><span class='m'>Fuente: "+n.s+"</span>";$("head").textContent=n.t;$("sh").textContent="💬 "+(40+n.t.length*3)+"   🔁 "+(200+n.t.length*41)+" compartidos";
+["fb","hint","next"].forEach(x=>$(x).classList.add("hide"));$("bv").disabled=$("bf").disabled=$("hb").disabled=false;hud();tl=LV[lv].t;tick();clearInterval(tm);tm=setInterval(()=>{tl-=.05;if(tl<=0){tl=0;tick();pick(-1)}else tick()},100)}
+function tick(){$("time").textContent="⏱ "+Math.ceil(tl)+" s";const p=tl/LV[lv].t*100,b=$("tbar");b.style.width=p+"%";b.style.background=p>50?"var(--ok)":p>25?"var(--wr)":"var(--no)"}
+$("hb").onclick=()=>{if(ans||hint)return;hint=true;sc=Math.max(0,sc-30);$("hint").textContent="💡 "+Q[i].p;$("hint").classList.remove("hide");$("hb").disabled=true;hud()};
+function pick(v){if(ans)return;ans=true;clearInterval(tm);const n=Q[i],good=v===n.r,f=$("fb");let gain=0;
+if(good){ok++;st++;bst=Math.max(bst,st);conf(st>=3?26:9);gain=100+Math.round(tl*5)+Math.min(st-1,5)*10;sc+=gain}
+else{st=0;hp--;(n.f||[]).forEach(x=>traps[x]=(traps[x]||0)+1)}
+f.className="fb "+(good?"ok":"no");
+const head=v===-1?"⌛ Se acabó el tiempo. ":good?"¡Correcto! +"+gain+" pts. ":"Ojo, perdés una vida. ";
+let h="<b>"+head+"Era "+(n.r?"VERDADERA":"FALSA")+".</b><br>"+n.w;
+if(n.f)h+="<br>"+n.f.map(x=>"<span class='chip'>🚩 "+x+"</span>").join("");
+h+="<br><span class='m'>👤 Publicó: "+n.n+" ("+n.h+") · "+(n.v?"cuenta verificada":"sin verificar")+" · creada "+n.cr+"</span>";f.innerHTML=h;$("bv").disabled=$("bf").disabled=$("hb").disabled=true;hud();
+$("next").textContent=(hp<=0||i===9)?"Ver resultado":"Siguiente →";$("next").classList.remove("hide")}
+function fin(){show("end");const a=ok/(i+1),r=sc>=900&&hp>0?["🕵️","Detective experto"]:sc>=600?["🧐","Buen ojo crítico"]:sc>=300?["🤔","Aprendiz curioso"]:["📰","Cuidado: te pueden engañar"];
+$("emoji").textContent=hp<=0?"💔":r[0];$("rank").textContent=r[1];
+$("why").textContent=(hp<=0?"Te quedaste sin vidas en el titular "+(i+1)+". ":"Completaste los 10 titulares. ")+"Nivel: "+LV[lv].n+".";
+$("e1").textContent=sc;$("e2").textContent=ok+"/"+(i+1);$("e3").textContent=bst;
+const t=Object.entries(traps).sort((x,y)=>y[1]-x[1])[0];
+$("trap").innerHTML=t?"🚩 Tu mayor punto ciego: <b>"+t[0]+"</b>. Es la señal que más se te escapó.":"👏 No cayeste en ninguna trampa de desinformación.";
+if(sc>(+ls("dn_b"+lv)||0))ls("dn_b"+lv,String(sc));wa();tab=lv;tabs();render();if(sc>=600)conf(44);saveScore()}
+$("pb").onclick=()=>{const h=$("prof").classList.toggle("hide");$("pb").textContent=h?"👤 Ver perfil":"✖ Cerrar perfil"};
+$("go").onclick=start;$("again").onclick=()=>{show("start");best()};
+$("bv").onclick=()=>pick(1);$("bf").onclick=()=>pick(0);
+$("next").onclick=()=>{if(hp<=0||i===9)fin();else{i++;load()}};
+function conf(n){const E=["🎉","⭐","✨","💜","💚","🧡","💙"];for(let k=0;k<n;k++){const s=document.createElement("span");s.className="cf";s.textContent=E[k%E.length];s.style.left=Math.random()*100+"vw";s.style.animationDelay=Math.random()*.5+"s";document.body.appendChild(s);setTimeout(()=>s.remove(),2800)}}
+let DB=null,UID=null,canW=null,rows=[],tab=0;
+function nickv(){return(($("nick").value||"").trim().slice(0,16))||"Anónimo"}
+function lbn(t){$("lbn").textContent=t}
+function tabs(){document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("g",+b.dataset.t!==tab))}
+function render(){const box=$("lb");box.textContent="";if(!DB){box.textContent="La clasificación no está disponible en este momento.";return}
+const L=rows.filter(r=>r["s"+tab]>0).sort((a,b)=>b["s"+tab]-a["s"+tab]).slice(0,10);
+if(!L.length){box.textContent="Todavía no hay puntajes en este nivel. ¡Sé el primero!";return}
+L.forEach((r,k)=>{const d=document.createElement("div");d.className="lr"+(r.id===UID?" me":"");d.innerHTML="<span></span><b></b><i></i>";d.children[0].textContent=["🥇","🥈","🥉"][k]||(k+1)+".";d.children[1].textContent=(r.nick||"Anónimo")+(r.id===UID?" (vos)":"");d.children[2].textContent=r["s"+tab]+" pts";box.appendChild(d)})}
+async function initDB(){try{if(typeof claude==="undefined")return;const u=await claude.use("user");const d=await claude.use("db");if(!d)return;DB=d;UID=u?await u.id():null;canW=u?await u.can("data.write"):null;
+DB.collection("scores").limit(300).onSnapshot(s=>{rows=s.docs.map(x=>Object.assign({id:x.id},x.data()));render()},()=>{lbn("No se pudo cargar la clasificación.")});render()}catch(e){}}
+async function saveScore(){if(!DB||!UID||!sc)return;if(canW===false){lbn("Por ahora no podés guardar puntajes en la clasificación.");return}
+try{const ref=DB.doc("scores/"+UID),s=await ref.get(),cur=s.exists?s.data():{},k="s"+lv,nick=nickv();
+if((cur[k]||0)>=sc&&cur.nick===nick){lbn("Tu récord en este nivel sigue siendo "+cur[k]+" pts.");return}
+const nx=Object.assign({},cur,{nick});if(sc>(cur[k]||0))nx[k]=sc;await ref.set(nx);lbn(sc>(cur[k]||0)?"✅ ¡Nuevo récord guardado en la clasificación!":"Tu récord en este nivel sigue siendo "+cur[k]+" pts.")}catch(e){lbn("No se pudo guardar tu puntaje en este momento.")}}
+function setupLB(){document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{tab=+b.dataset.t;tabs();render()});tabs();render();initDB()}
+const LINK="https://maximogordillo74-glitch.github.io/fake-news/";
+function msg(l){const t=sc?"🔎 Hice "+sc+" puntos en Detective de Noticias ("+LV[lv].n+"). ¿Podés detectar las fake news mejor que yo?":"🔎 Probá Detective de Noticias: ¿podés distinguir las noticias falsas de las verdaderas?";return t+(l?" "+LINK:"")}
+function wa(){$("wa").href="https://wa.me/?text="+encodeURIComponent(msg(1))}
+function flash(b,t){const o=b.textContent;b.textContent=t;setTimeout(()=>b.textContent=o,2000)}
+async function share(b){try{if(navigator.share){await navigator.share({title:"Detective de Noticias",text:msg(0),url:LINK});return}}catch(e){if(e&&e.name==="AbortError")return}try{await navigator.clipboard.writeText(msg(1));flash(b,"✔ Link copiado")}catch(e){flash(b,LINK)}}
+$("copy").onclick=async()=>{try{await navigator.clipboard.writeText(msg(1));flash($("copy"),"✔ Copiado")}catch(e){flash($("copy"),LINK)}};
+$("sh2").onclick=()=>share($("sh2"));$("inv").onclick=()=>share($("inv"));
+$("nick").value=ls("dn_nick")||"";
+function go1(){const v=($("nick").value||"").trim().slice(0,16);if(!v){$("nerr").textContent="Escribí un nombre para continuar.";$("nick").focus();return}ls("dn_nick",v);$("who2").textContent="👤 Jugás como: "+v;show("start")}
+$("ok1").onclick=go1;$("nick").onkeydown=e=>{if(e.key==="Enter")go1()};$("chg").onclick=()=>show("name");
+setupLB();
+best();
+</script>
+</body>
+</html>
